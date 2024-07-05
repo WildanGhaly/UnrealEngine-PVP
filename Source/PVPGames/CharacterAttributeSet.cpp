@@ -10,19 +10,12 @@ UCharacterAttributeSet::UCharacterAttributeSet()
 void UCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Health, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseHealth, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Mana, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseMana, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseStamina, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, AttackDamage, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseAttackDamage, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseAttackSpeed, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Defense, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseDefense, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
-    DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, BaseMovementSpeed, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Experience, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, Level, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeSet, KillCount, COND_None, REPNOTIFY_Always);
@@ -125,15 +118,25 @@ void UCharacterAttributeSet::LevelUp()
 
     const FLevelStats& Stats = LevelStatsTable[CurrentLevel];
 
-    BaseHealth.SetCurrentValue(Stats.BaseHealth);
-    Health.SetCurrentValue(Stats.BaseHealth);
-    BaseAttackDamage.SetCurrentValue((Stats.BaseAttackDamage.X + Stats.BaseAttackDamage.Y) / 2);
-    AttackDamage.SetCurrentValue(GetRandomAttackDamage(Stats.BaseAttackDamage));
-    BaseAttackSpeed.SetCurrentValue(Stats.AttackSpeed);
+    Health.SetBaseValue(Stats.Health);
+    Health.SetCurrentValue(Stats.Health);
+
+    Mana.SetBaseValue(Stats.Mana);
+    Mana.SetCurrentValue(Stats.Mana);
+
+    Stamina.SetBaseValue(Stats.Stamina);
+    Stamina.SetCurrentValue(Stats.Stamina);
+
+    AttackDamage.SetBaseValue((Stats.AttackDamage.X + Stats.AttackDamage.Y) / 2);
+    AttackDamage.SetCurrentValue(GetRandomAttackDamage(Stats.AttackDamage));
+
+    AttackSpeed.SetBaseValue(Stats.AttackSpeed);
     AttackSpeed.SetCurrentValue(Stats.AttackSpeed);
-    BaseDefense.SetCurrentValue(Stats.Defense);
+
+    Defense.SetBaseValue(Stats.Defense);
     Defense.SetCurrentValue(Stats.Defense);
-    BaseMovementSpeed.SetCurrentValue(Stats.MovementSpeed);
+
+    MovementSpeed.SetBaseValue(Stats.MovementSpeed);
     MovementSpeed.SetCurrentValue(Stats.MovementSpeed);
 
     Level.SetCurrentValue(CurrentLevel + 1);
@@ -155,18 +158,24 @@ void UCharacterAttributeSet::InitializeStatsFromLevel()
 
     const FLevelStats& Stats = LevelStatsTable[CurrentLevel];
 
-    BaseHealth.SetCurrentValue(Stats.BaseHealth);
-    Health.SetCurrentValue(Stats.BaseHealth);
-    BaseMana.SetCurrentValue(Stats.Mana);
+    Health.SetBaseValue(Stats.Health);
+    Health.SetCurrentValue(Stats.Health);
+
+    Mana.SetBaseValue(Stats.Mana);
     Mana.SetCurrentValue(Stats.Mana);
-    BaseStamina.SetCurrentValue(Stats.Stamina);
+
+    Stamina.SetBaseValue(Stats.Stamina);
     Stamina.SetCurrentValue(Stats.Stamina);
-    BaseAttackDamage.SetCurrentValue((Stats.BaseAttackDamage.X + Stats.BaseAttackDamage.Y) / 2);
-    AttackDamage.SetCurrentValue(GetRandomAttackDamage(Stats.BaseAttackDamage));
-    BaseAttackSpeed.SetCurrentValue(Stats.AttackSpeed);
+
+    AttackDamage.SetBaseValue((Stats.AttackDamage.X + Stats.AttackDamage.Y) / 2);
+    AttackDamage.SetCurrentValue(GetRandomAttackDamage(Stats.AttackDamage));
+
+    AttackSpeed.SetBaseValue(Stats.AttackSpeed);
     AttackSpeed.SetCurrentValue(Stats.AttackSpeed);
-    BaseDefense.SetCurrentValue(Stats.Defense);
+
+    Defense.SetBaseValue(Stats.Defense);
     Defense.SetCurrentValue(Stats.Defense);
-    BaseMovementSpeed.SetCurrentValue(Stats.MovementSpeed);
+
+    MovementSpeed.SetBaseValue(Stats.MovementSpeed);
     MovementSpeed.SetCurrentValue(Stats.MovementSpeed);
 }

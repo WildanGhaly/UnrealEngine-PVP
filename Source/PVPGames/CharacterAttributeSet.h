@@ -30,6 +30,12 @@ struct FLevelStats : public FTableRowBase
     FVector2D AttackDamage; // X: Min, Y: Max
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AttackDamageMin;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AttackDamageMax;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AttackSpeed;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -94,6 +100,26 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Attributes")
     void OnAttackDamageChanged(const FGameplayAttributeData& OldAttackDamage);
+
+    UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_AttackDamageMin, Category = "Attributes")
+    FGameplayAttributeData AttackDamageMin;
+    ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, AttackDamageMin);
+
+    UFUNCTION()
+    virtual void OnRep_AttackDamageMin(const FGameplayAttributeData& OldAttackDamageMin);
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "Attributes")
+    void OnAttackDamageMinChanged(const FGameplayAttributeData& OldAttackDamageMin);
+
+    UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_AttackDamageMax, Category = "Attributes")
+    FGameplayAttributeData AttackDamageMax;
+    ATTRIBUTE_ACCESSORS(UCharacterAttributeSet, AttackDamageMax);
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "Attributes")
+    void OnAttackDamageMaxChanged(const FGameplayAttributeData& OldAttackDamageMax);
+
+    UFUNCTION()
+    virtual void OnRep_AttackDamageMax(const FGameplayAttributeData& OldAttackDamageMax);
 
     UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_AttackSpeed, Category = "Attributes")
     FGameplayAttributeData AttackSpeed;

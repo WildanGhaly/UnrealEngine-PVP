@@ -72,4 +72,44 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Character")
     void OnCharacterDeath_BP();
+
+    // New functions for attribute change events
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnHealthChanged(const FGameplayAttributeData& OldHealth);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnManaChanged(const FGameplayAttributeData& OldMana);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnStaminaChanged(const FGameplayAttributeData& OldStamina);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnAttackDamageChanged(const FGameplayAttributeData& OldAttackDamage);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnAttackDamageMinChanged(const FGameplayAttributeData& OldAttackDamageMin);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnAttackDamageMaxChanged(const FGameplayAttributeData& OldAttackDamageMax);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnAttackSpeedChanged(const FGameplayAttributeData& OldAttackSpeed);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnDefenseChanged(const FGameplayAttributeData& OldDefense);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnMovementSpeedChanged(const FGameplayAttributeData& OldMovementSpeed);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnExperienceChanged(const FGameplayAttributeData& OldExperience);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnLevelChanged(const FGameplayAttributeData& OldLevel);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnKillCountChanged(const FGameplayAttributeData& OldKillCount);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
+    void OnDeathCountChanged(const FGameplayAttributeData& OldDeathCount);
 };

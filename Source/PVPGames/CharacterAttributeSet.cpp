@@ -25,13 +25,11 @@ void UCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 void UCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-    // Handle logic before an attribute changes
     Super::PreAttributeChange(Attribute, NewValue);
 
     if (Attribute == GetLevelAttribute())
     {
         // Logic to handle before the Level attribute changes
-        // For example, you might want to modify the new value based on some conditions
     }
 }
 
@@ -181,7 +179,7 @@ void UCharacterAttributeSet::AddExperience(float ExperiencePoints)
 
     OnExperienceChanged(OldExperience);
 
-    int32 CurrentLevel = Level.GetCurrentValue();
+    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
     if (CurrentLevel < MaxLevel && NewExperience >= ExperienceTable[CurrentLevel])
     {
         LevelUp();
@@ -190,7 +188,7 @@ void UCharacterAttributeSet::AddExperience(float ExperiencePoints)
 
 void UCharacterAttributeSet::LevelUp()
 {
-    int32 CurrentLevel = Level.GetCurrentValue();
+    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
     if (CurrentLevel < MaxLevel)
     {
         Level.SetBaseValue(CurrentLevel + 1);
@@ -201,7 +199,7 @@ void UCharacterAttributeSet::LevelUp()
 
 void UCharacterAttributeSet::InitializeStatsFromLevel()
 {
-    int32 CurrentLevel = Level.GetCurrentValue();
+    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
     if (LevelStatsDataTable)
     {
         FString ContextString;

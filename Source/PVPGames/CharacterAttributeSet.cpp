@@ -25,11 +25,13 @@ void UCharacterAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 void UCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
+    // Handle logic before an attribute changes
     Super::PreAttributeChange(Attribute, NewValue);
 
     if (Attribute == GetLevelAttribute())
     {
         // Logic to handle before the Level attribute changes
+        // For example, you might want to modify the new value based on some conditions
     }
 }
 
@@ -68,11 +70,16 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
     else if (Data.EvaluatedData.Attribute == GetExperienceAttribute())
     {
         OnExperienceChanged(Experience.GetCurrentValue());
+
         // Check for level up
         int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
-        if (Experience.GetCurrentValue() >= ExperienceTable[CurrentLevel])
+        while (CurrentLevel < MaxLevel && Experience.GetCurrentValue() >= ExperienceTable[CurrentLevel-1])
         {
+            float ExcessExperience = Experience.GetCurrentValue() - ExperienceTable[CurrentLevel-1];
             LevelUp();
+            Experience.SetBaseValue(ExcessExperience);
+            Experience.SetCurrentValue(ExcessExperience);
+            CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
         }
     }
     else if (Data.EvaluatedData.Attribute == GetLevelAttribute())
@@ -179,16 +186,23 @@ void UCharacterAttributeSet::AddExperience(float ExperiencePoints)
 
     OnExperienceChanged(OldExperience);
 
-    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
-    if (CurrentLevel < MaxLevel && NewExperience >= ExperienceTable[CurrentLevel])
+    int32 CurrentLevel = Level.GetCurrentValue();
+    while (CurrentLevel < MaxLevel && NewExperience >= ExperienceTable[CurrentLevel - 1])
     {
+        NewExperience -= ExperienceTable[CurrentLevel - 1];
         LevelUp();
+        CurrentLevel = Level.GetCurrentValue();
     }
+
+    // Update the experience to reflect the remaining experience after level-ups
+    Experience.SetBaseValue(NewExperience);
+    Experience.SetCurrentValue(NewExperience);
 }
+
 
 void UCharacterAttributeSet::LevelUp()
 {
-    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
+    int32 CurrentLevel = Level.GetCurrentValue();
     if (CurrentLevel < MaxLevel)
     {
         Level.SetBaseValue(CurrentLevel + 1);
@@ -199,7 +213,7 @@ void UCharacterAttributeSet::LevelUp()
 
 void UCharacterAttributeSet::InitializeStatsFromLevel()
 {
-    int32 CurrentLevel = static_cast<int32>(Level.GetCurrentValue());
+    int32 CurrentLevel = Level.GetCurrentValue();
     if (LevelStatsDataTable)
     {
         FString ContextString;
@@ -222,11 +236,16 @@ void UCharacterAttributeSet::InitializeStatsFromLevel()
             AttackSpeed.SetCurrentValue(LevelStats->AttackSpeed);
             Defense.SetCurrentValue(LevelStats->Defense);
             MovementSpeed.SetCurrentValue(LevelStats->MovementSpeed);
+
+            // Update ExperienceTable to include ExperienceRequired from the LevelStats
+            ExperienceTable[CurrentLevel - 1] = LevelStats->ExperienceRequired;
         }
     }
 }
+
 
 float UCharacterAttributeSet::GetRandomAttackDamage(FVector2D DamageRange)
 {
     return FMath::RandRange(DamageRange.X, DamageRange.Y);
 }
+

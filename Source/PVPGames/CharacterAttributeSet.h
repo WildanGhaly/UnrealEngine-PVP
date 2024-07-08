@@ -37,6 +37,9 @@ struct FLevelStats : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float MovementSpeed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float ExperienceRequired;
 };
 
 UCLASS()
@@ -177,7 +180,7 @@ protected:
 
 private:
     static const int32 MaxLevel = 10;
-    int32 ExperienceTable[MaxLevel] = { 500, 1000, 1600, 2300, 3100, 4000, 5200, 6500, 8000 };
+    int32 ExperienceTable[MaxLevel] = {};
 
     void LevelUp();
     float GetRandomAttackDamage(FVector2D DamageRange);

@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GameplayTagContainer.h"
-#include <GameplayEffectTypes.h>
+#include "GameplayEffectTypes.h"
 #include "AbilitySystemInterface.h"
 #include "CharacterAttributeSet.h"
 #include "Logging/LogMacros.h"
@@ -20,51 +20,56 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 UCLASS(config = Game)
 class APVPGamesCharacter : public ACharacter, public IAbilitySystemInterface
 {
-	GENERATED_BODY()
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-	UAbilitySystemComponent* AbilitySystemComponent;
-
-	UPROPERTY()
-	class UCharacterAttributeSet* Attributes;
-
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* JumpAction;
-
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
-
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+    GENERATED_BODY()
 
 public:
-	APVPGamesCharacter();
+    // Making AbilitySystemComponent public for Blueprint access
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+    UAbilitySystemComponent* AbilitySystemComponent;
 
-	// overwritten from IAbilitySystemInterface
-	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+    // Property to hold the class of the AttributeSet
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+    TSubclassOf<UCharacterAttributeSet> AttributeSetClass;
 
-public:
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_PlayerState() override;
-	virtual void InitializeAttributes();
-	virtual void GiveDefaultAbilities();
+    // Property to hold the instance of the AttributeSet
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")
+    UCharacterAttributeSet* Attributes;
 
-	UPROPERTY(BluePrintReadOnly, EditDefaultsOnly, Category = "Abilities")
-	TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+    // Other properties
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(BluePrintReadOnly, EditDefaultsOnly, Category = "Abilities")
-	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbilities;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* JumpAction;
 
-	UFUNCTION(BlueprintCallable, Category = "Character")
-	void OnCharacterDeath();
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* MoveAction;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Character")
-	void OnCharacterDeath_BP();
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* LookAction;
+
+    APVPGamesCharacter();
+
+    // Ability System Interface Override
+    UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+    // Game lifecycle events
+    virtual void PossessedBy(AController* NewController) override;
+    virtual void OnRep_PlayerState() override;
+    virtual void InitializeAttributes();
+    virtual void GiveDefaultAbilities();
+
+    // Blueprint properties for abilities
+    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Abilities")
+    TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+
+    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Abilities")
+    TArray<TSubclassOf<class UGameplayAbility>> DefaultAbilities;
+
+    // Character death handling
+    UFUNCTION(BlueprintCallable, Category = "Character")
+    void OnCharacterDeath();
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "Character")
+    void OnCharacterDeath_BP();
 };

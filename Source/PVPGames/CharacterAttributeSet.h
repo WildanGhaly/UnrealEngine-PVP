@@ -58,7 +58,7 @@ public:
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Attributes")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
     UDataTable* LevelStatsDataTable;
 
     UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_Health, Category = "Attributes")

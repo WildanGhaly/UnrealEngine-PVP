@@ -112,4 +112,5 @@ public:
 
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Attributes")
     void OnDeathCountChanged(const FGameplayAttributeData& OldDeathCount);
+
 };

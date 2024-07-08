@@ -38,9 +38,10 @@ void APVPGamesCharacter::PossessedBy(AController* NewController)
     if (AttributeSetClass)
     {
         Attributes = NewObject<UCharacterAttributeSet>(this, AttributeSetClass);
-        if (Attributes && Attributes->LevelStatsDataTable)
+        if (Attributes)
         {
-            AbilitySystemComponent->InitStats(AttributeSetClass, Attributes->LevelStatsDataTable);
+            AbilitySystemComponent->AddAttributeSetSubobject(Attributes);
+            Attributes->InitializeStatsFromLevel();
         }
     }
 
@@ -68,11 +69,6 @@ void APVPGamesCharacter::InitializeAttributes()
 
         if (SpecHandle.IsValid()) {
             FActiveGameplayEffectHandle GEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-
-            // Initialize stats based on the starting level using the data table
-            if (Attributes && Attributes->LevelStatsDataTable) {
-                Attributes->InitializeStatsFromLevel();
-            }
         }
     }
 }
@@ -80,8 +76,12 @@ void APVPGamesCharacter::InitializeAttributes()
 void APVPGamesCharacter::GiveDefaultAbilities()
 {
     if (HasAuthority() && AbilitySystemComponent)
+    {
         for (TSubclassOf<UGameplayAbility>& StartUpAbility : DefaultAbilities)
+        {
             AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(StartUpAbility.GetDefaultObject(), 1, 0));
+        }
+    }
 }
 
 void APVPGamesCharacter::OnCharacterDeath()
